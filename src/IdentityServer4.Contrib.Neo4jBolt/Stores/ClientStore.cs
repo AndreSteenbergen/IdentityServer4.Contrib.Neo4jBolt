@@ -132,7 +132,7 @@ namespace IdentityServer4.Contrib.Neo4jBolt.Stores
                         tx.Run($@"
                                     UNWIND {{identityProviderRestrictions}} AS rst
                                     MATCH (client:{cfg.ClientLabel} {{ClientId: {{clientId}}}})
-                                    MERGE (restriction:{cfg.ClientIdentityProviderRestrictionLabel} {{IdentityProviderRestriction : rst}})
+                                    MERGE (restriction:{cfg.IdentityProviderRestrictionLabel} {{IdentityProviderRestriction : rst}})
                                     CREATE UNIQUE (client)-[:{cfg.HasIdentityProviderRestrictionsRelName}]->(restriction)
                                     ", new Dictionary<string, object> {
                                         { "identityProviderRestrictions", client.IdentityProviderRestrictions.ToArray() },

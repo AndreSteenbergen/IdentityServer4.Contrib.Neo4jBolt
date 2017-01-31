@@ -22,9 +22,8 @@ namespace IdentityServer4.Contrib.Neo4jBolt
                 tx.Run($"CREATE CONSTRAINT ON (n:{config.ClientRedirectUriLabel}) ASSERT n.RedirectUri IS UNIQUE");
                 tx.Run($"CREATE CONSTRAINT ON (n:{config.ClientCorsOriginLabel}) ASSERT n.CorsOrigin IS UNIQUE");
                 tx.Run($"CREATE CONSTRAINT ON (n:{config.ClientGrantTypeLabel}) ASSERT n.GrantType IS UNIQUE");
-                tx.Run($"CREATE CONSTRAINT ON (n:{config.ClientIdentityProviderRestrictionLabel}) ASSERT n.IdentityProviderRestriction IS UNIQUE");
-                tx.Run($"CREATE CONSTRAINT ON (n:{config.ClientScopeLabel}) ASSERT n.Scope IS UNIQUE");
-
+                tx.Run($"CREATE CONSTRAINT ON (n:{config.IdentityProviderRestrictionLabel}) ASSERT n.IdentityProviderRestriction IS UNIQUE");
+                
                 tx.Run($"CREATE CONSTRAINT ON (n:{config.ApiResourceLabel}) ASSERT n.Name IS UNIQUE");
                 tx.Run($"CREATE CONSTRAINT ON (n:{config.ResourceScopeLabel}) ASSERT n.Name IS UNIQUE");
                 tx.Run($"CREATE CONSTRAINT ON (n:{config.PersistedGrantLabel}) ASSERT n.Key IS UNIQUE");

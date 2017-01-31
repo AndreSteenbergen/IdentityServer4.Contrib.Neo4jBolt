@@ -32,7 +32,6 @@ namespace IdentityServer4.Contrib.Neo4jBolt
         public string ExternalLoginLabel => Settings["ExternalLoginLabel"] ?? "ExternalLogin";
         public string SecretLabel => Settings["SecretLabel"] ?? "Secret";
         public string ClientLabel => Settings["ClientLabel"] ?? "Client";
-        public string ClientScopeLabel => Settings["ClientScopeLabel"] ?? "ClientScope";
         
         public string ClientCorsOriginLabel => Settings["ClientCorsOriginLabel"] ?? "ClientCorsOrigin";
         public string ClientGrantTypeLabel => Settings["ClientGrantTypeLabel"] ?? "ClientGrantType";
@@ -41,7 +40,7 @@ namespace IdentityServer4.Contrib.Neo4jBolt
         public string ApiResourceLabel => Settings["ApiResourceLabel"] ?? "ApiResource";
         public string IdentityResourceLabel => Settings["IdentityResourceLabel"] ?? "IdentityResource";
         public string PersistedGrantLabel => Settings["PersistedGrantLabel"] ?? "PersistedGrant";
-        public string ClientIdentityProviderRestrictionLabel => Settings["IdentityProviderRestrictionLabel"] ?? "IdentityProviderRestriction";
+        public string IdentityProviderRestrictionLabel => Settings["IdentityProviderRestrictionLabel"] ?? "IdentityProviderRestriction";
 
         public string HasClaimRelName => Settings["HasClaimRelName"] ?? "HAS_Claim";
         public string HasSecretRelName => Settings["HasSecretRelName"] ?? "HAS_Secret";
