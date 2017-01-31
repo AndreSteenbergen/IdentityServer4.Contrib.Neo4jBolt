@@ -23,6 +23,25 @@ namespace IdentityServer4.Contrib.Neo4jBolt.Stores
             {
                 try
                 {
+                    //first check if all scopes already exists in the database:
+                    var result = tx.Run($@"
+                                    UNWIND {{scopes}} AS sc
+                                    MATCH (scope:{cfg.ResourceScopeLabel} {{Name : sc}})
+                                    RETURN scope.Name AS Name
+                                    UNION
+                                    UNWIND {{scopes}} AS sc
+                                    MATCH (idResource:{cfg.IdentityResourceLabel} {{Name : sc}})
+                                    RETURN idResource.Name AS Name
+                                    ", new Dictionary<string, object> {
+                                        { "scopes", client.AllowedScopes.ToArray() }
+                                    }).ToList();
+                    //check if all scopes exist in the database
+                    var existingScopes = result.Select(r => r["Name"].As<string>()).Distinct().ToList();
+                    var clientScopes = client.AllowedScopes.Distinct().ToList();
+                    
+                    if (clientScopes.Except(existingScopes).Any())
+                        throw new Exception("Invalid scopes found");
+
                     string CreateClientCommand = $@"
                                     CREATE (client:{cfg.ClientLabel} {{ClientId: {{clientId}}}})
                                     SET
@@ -126,8 +145,18 @@ namespace IdentityServer4.Contrib.Neo4jBolt.Stores
                         tx.Run($@"
                                     UNWIND {{scopes}} AS sc
                                     MATCH (client:{cfg.ClientLabel} {{ClientId: {{clientId}}}})
-                                    MERGE (scope:{cfg.ClientScopeLabel} {{Scope : sc}})
-                                    CREATE UNIQUE (client)-[:{cfg.HasScopeRelName}]->(restriction)
+                                    MATCH (scope:{cfg.ResourceScopeLabel} {{Name : sc}})
+                                    CREATE UNIQUE (client)-[:{cfg.HasScopeRelName}]->(scope)
+                                    ", new Dictionary<string, object> {
+                                        { "scopes", client.AllowedScopes.ToArray() },
+                                        { "clientId", client.ClientId }
+                                    });
+
+                        tx.Run($@"
+                                    UNWIND {{scopes}} AS sc
+                                    MATCH (client:{cfg.ClientLabel} {{ClientId: {{clientId}}}})
+                                    MATCH (idResource:{cfg.IdentityResourceLabel} {{Name : sc}})
+                                    CREATE UNIQUE (client)-[:{cfg.HasScopeRelName}]->(idResource)
                                     ", new Dictionary<string, object> {
                                         { "scopes", client.AllowedScopes.ToArray() },
                                         { "clientId", client.ClientId }
@@ -250,7 +279,7 @@ namespace IdentityServer4.Contrib.Neo4jBolt.Stores
                         if (linkType.Equals(cfg.HasScopeRelName))
                         {
                             ICollection<string> list = client.AllowedScopes ?? (client.AllowedScopes = new List<string>());
-                            list.Add(relationNode["Scope"].As<string>());
+                            list.Add(relationNode["Name"].As<string>());
                         }
 
                         if (linkType.Equals(cfg.HasClaimRelName))
