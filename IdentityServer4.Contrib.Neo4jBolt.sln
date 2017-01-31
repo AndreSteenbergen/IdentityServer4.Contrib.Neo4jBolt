@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AEE722E3-38B6-4C1B-BF1D-1917650643B6}"
 	ProjectSection(SolutionItems) = preProject
 		global.json = global.json
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "IdentityServer4.Contrib.Neo4jBolt", "src\IdentityServer4.Contrib.Neo4jBolt\IdentityServer4.Contrib.Neo4jBolt.xproj", "{2A9C37DD-06C8-4228-9B2C-88A850C0D536}"
